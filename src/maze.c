@@ -23,10 +23,10 @@ generate_grid()
 
   // struct Cell* curr_cell = &grid[MAZE_HEIGHT / 3][MAZE_WIDTH / 2];
   // TODO: choose curr_cell with roll number
-  struct Cell* curr_cell = &grid[0][0];
+  struct Cell* start_cell = &grid[0][0];
 
   srand(time(NULL));
-  randomized_dfs(grid, curr_cell);
+  randomized_dfs(grid, start_cell);
 
   return grid;
 }
@@ -49,44 +49,38 @@ get_neighbour(struct Cell** grid, struct Cell cell)
   int size = 0;
   struct Cell* neighours[4];
 
-  if (cell.y > 0 && !grid[cell.y - 1][cell.x].visited) {
+  if (cell.y > 0 && !grid[cell.y - 1][cell.x].visited)
     neighours[size++] = &grid[cell.y - 1][cell.x];
-  }
 
-  if (cell.x > 0 && !grid[cell.y][cell.x - 1].visited) {
+  if (cell.x > 0 && !grid[cell.y][cell.x - 1].visited)
     neighours[size++] = &grid[cell.y][cell.x - 1];
-  }
 
-  if (cell.y < MAZE_HEIGHT - 1 && !grid[cell.y + 1][cell.x].visited) {
+  if (cell.y < MAZE_HEIGHT - 1 && !grid[cell.y + 1][cell.x].visited)
     neighours[size++] = &grid[cell.y + 1][cell.x];
-  }
 
-  if (cell.x < MAZE_WIDTH - 1 && !grid[cell.y][cell.x + 1].visited) {
+  if (cell.x < MAZE_WIDTH - 1 && !grid[cell.y][cell.x + 1].visited)
     neighours[size++] = &grid[cell.y][cell.x + 1];
-  }
 
-  if (!size) {
+  if (!size)
     return NULL;
-  } else {
+  else
     return neighours[rand() % size];
-  }
 }
 
 void
 connect_cells(struct Cell* curr_cell, struct Cell* next_cell)
 {
-  if ((curr_cell->x == next_cell->x) && (curr_cell->y == next_cell->y + 1)) {
+  if ((curr_cell->x == next_cell->x) && (curr_cell->y == next_cell->y + 1))
     curr_cell->top = next_cell->bottom = false;
-  }
-  if (curr_cell->x == next_cell->x && curr_cell->y == next_cell->y - 1) {
+
+  if (curr_cell->x == next_cell->x && curr_cell->y == next_cell->y - 1)
     curr_cell->bottom = next_cell->top = false;
-  }
-  if (curr_cell->x == next_cell->x - 1 && curr_cell->y == next_cell->y) {
+
+  if (curr_cell->x == next_cell->x - 1 && curr_cell->y == next_cell->y)
     curr_cell->right = next_cell->left = false;
-  }
-  if (curr_cell->x == next_cell->x + 1 && curr_cell->y == next_cell->y) {
+
+  if (curr_cell->x == next_cell->x + 1 && curr_cell->y == next_cell->y)
     curr_cell->left = next_cell->right = false;
-  }
 }
 
 void
