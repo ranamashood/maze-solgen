@@ -1,21 +1,18 @@
 #ifndef CELL_H
 #define CELL_H
 
-enum Bool
-{
-  FALSE,
-  TRUE,
-};
+#include <SDL2/SDL_render.h>
+#include <stdbool.h>
 
 struct Cell
 {
   int x;
   int y;
-  enum Bool visited;
-  enum Bool top;
-  enum Bool right;
-  enum Bool bottom;
-  enum Bool left;
+  bool visited;
+  bool top;
+  bool right;
+  bool bottom;
+  bool left;
 };
 
 struct Cell**
@@ -30,7 +27,7 @@ get_neighbour(struct Cell** grid, struct Cell cell);
 void
 connect_cells(struct Cell* curr_cell, struct Cell* next_cell);
 
-int
-display_maze(struct Cell** grid);
+void
+display_maze(struct Cell** grid, SDL_Renderer* renderer);
 
 #endif // !CELL_H

@@ -2,7 +2,7 @@
 
 - [x] generate random maze
 - [ ] a\* algo to find shortest path
-- [ ] refactor code
+- [ ] publish github release (linux + windows)
 - [ ] add README
 - [ ] display maze generating steps (step wise + each iteration wise)
 - [ ] write own config parser

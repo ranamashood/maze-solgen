@@ -1,5 +1,4 @@
 #include "../include/maze.h"
-#include <SDL2/SDL.h>
 #include <time.h>
 
 // TODO: set maze width and height with roll number
@@ -18,7 +17,7 @@ generate_grid()
 
   for (int y = 0; y < MAZE_HEIGHT; y++) {
     for (int x = 0; x < MAZE_WIDTH; x++) {
-      grid[y][x] = (struct Cell){ x, y, FALSE, TRUE, TRUE, TRUE, TRUE };
+      grid[y][x] = (struct Cell){ x, y, false, true, true, true, true };
     }
   }
 
@@ -35,7 +34,7 @@ generate_grid()
 void
 randomized_dfs(struct Cell** grid, struct Cell* cell)
 {
-  cell->visited = TRUE;
+  cell->visited = true;
   struct Cell* next_cell = get_neighbour(grid, *cell);
   while (next_cell != NULL) {
     connect_cells(cell, next_cell);
@@ -66,66 +65,35 @@ get_neighbour(struct Cell** grid, struct Cell cell)
     neighours[size++] = &grid[cell.y][cell.x + 1];
   }
 
-  // TODO: remove rand_num function and use one line exclusive method
   if (!size) {
     return NULL;
   } else {
-    int rand_index = rand() % size;
-    return neighours[rand_index];
+    return neighours[rand() % size];
   }
 }
 
 void
 connect_cells(struct Cell* curr_cell, struct Cell* next_cell)
 {
-  if ((curr_cell->x == next_cell->x) &&
-      (curr_cell->y == next_cell->y + 1)) { /// top
-    curr_cell->top = next_cell->bottom = FALSE;
+  if ((curr_cell->x == next_cell->x) && (curr_cell->y == next_cell->y + 1)) {
+    curr_cell->top = next_cell->bottom = false;
   }
-  if (curr_cell->x == next_cell->x &&
-      curr_cell->y == next_cell->y - 1) { /// bottom
-    curr_cell->bottom = next_cell->top = FALSE;
+  if (curr_cell->x == next_cell->x && curr_cell->y == next_cell->y - 1) {
+    curr_cell->bottom = next_cell->top = false;
   }
-  if (curr_cell->x == next_cell->x - 1 &&
-      curr_cell->y == next_cell->y) { /// right
-    curr_cell->right = next_cell->left = FALSE;
+  if (curr_cell->x == next_cell->x - 1 && curr_cell->y == next_cell->y) {
+    curr_cell->right = next_cell->left = false;
   }
-  if (curr_cell->x == next_cell->x + 1 &&
-      curr_cell->y == next_cell->y) { /// left
-    curr_cell->left = next_cell->right = FALSE;
+  if (curr_cell->x == next_cell->x + 1 && curr_cell->y == next_cell->y) {
+    curr_cell->left = next_cell->right = false;
   }
 }
 
-int
-display_maze(struct Cell** grid)
+void
+display_maze(struct Cell** grid, SDL_Renderer* renderer)
 {
-  if (SDL_Init(SDL_INIT_VIDEO) < 0) {
-    printf("SDL could not be initialized! SDL_Error: %s\n", SDL_GetError());
-    return 1;
-  }
-
-  SDL_Window* window = NULL;
-  SDL_Renderer* renderer = NULL;
-
-  window = SDL_CreateWindow("Maze Solgen",
-                            SDL_WINDOWPOS_CENTERED,
-                            SDL_WINDOWPOS_CENTERED,
-                            1000,
-                            700,
-                            SDL_WINDOW_SHOWN);
-  if (window == NULL) {
-    printf("Window could not be created! SDL_Error: %s\n", SDL_GetError());
-    return 1;
-  }
-
-  renderer = SDL_CreateRenderer(window, -1, SDL_RENDERER_ACCELERATED);
-  if (renderer == NULL) {
-    fprintf(
-      stderr, "Renderer could not be created! SDL_Error: %s\n", SDL_GetError());
-    return 1;
-  }
-
   SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+
   for (int y = 0; y < MAZE_HEIGHT; y++) {
     for (int x = 0; x < MAZE_WIDTH; x++) {
       struct Cell cell = grid[y][x];
@@ -165,20 +133,4 @@ display_maze(struct Cell** grid)
   }
 
   SDL_RenderPresent(renderer);
-
-  SDL_Event e;
-  int quit = 0;
-  while (!quit) {
-    while (SDL_PollEvent(&e)) {
-      if (e.type == SDL_QUIT)
-        quit = 1;
-    }
-    SDL_Delay(10);
-  }
-
-  SDL_DestroyRenderer(renderer);
-  SDL_DestroyWindow(window);
-  SDL_Quit();
-
-  return 0;
 }
