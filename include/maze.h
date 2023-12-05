@@ -15,6 +15,12 @@ struct Cell
   bool left;
 };
 
+struct CellPos
+{
+  int x;
+  int y;
+};
+
 struct Cell**
 generate_grid();
 
@@ -29,5 +35,8 @@ connect_cells(struct Cell* curr_cell, struct Cell* next_cell);
 
 void
 display_maze(struct Cell** grid, SDL_Renderer* renderer);
+
+void
+draw_path(struct CellPos path[], int path_size, SDL_Renderer* renderer);
 
 #endif // !CELL_H

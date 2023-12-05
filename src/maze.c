@@ -1,10 +1,16 @@
 #include "../include/maze.h"
+#include <SDL2/SDL_render.h>
+#include <SDL2/SDL_timer.h>
 #include <time.h>
 
 // TODO: set maze width and height with roll number
-const int MAZE_WIDTH = 50;
-const int MAZE_HEIGHT = 50;
-const int CELL_SIZE = 10;
+// const int MAZE_WIDTH = 50;
+// const int MAZE_HEIGHT = 50;
+// const int CELL_SIZE = 10;
+
+const int MAZE_WIDTH = 20;
+const int MAZE_HEIGHT = 20;
+const int CELL_SIZE = 30;
 
 struct Cell**
 generate_grid()
@@ -17,7 +23,15 @@ generate_grid()
 
   for (int y = 0; y < MAZE_HEIGHT; y++) {
     for (int x = 0; x < MAZE_WIDTH; x++) {
-      grid[y][x] = (struct Cell){ x, y, false, true, true, true, true };
+      grid[y][x] = (struct Cell){
+        .x = x,
+        .y = y,
+        .visited = false,
+        .top = true,
+        .right = true,
+        .bottom = true,
+        .left = true,
+      };
     }
   }
 
@@ -86,45 +100,72 @@ connect_cells(struct Cell* curr_cell, struct Cell* next_cell)
 void
 display_maze(struct Cell** grid, SDL_Renderer* renderer)
 {
-  SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+  // bg color
+  SDL_SetRenderDrawColor(renderer, 1, 21, 2, 255);
+  SDL_RenderClear(renderer);
+  // SDL_RenderPresent(renderer);
+
+  SDL_SetRenderDrawColor(renderer, 50, 116, 109, 255);
 
   for (int y = 0; y < MAZE_HEIGHT; y++) {
     for (int x = 0; x < MAZE_WIDTH; x++) {
       struct Cell cell = grid[y][x];
 
-      if (cell.top) {
+      if (cell.top)
         SDL_RenderDrawLine(renderer,
                            x * CELL_SIZE,
                            y * CELL_SIZE,
                            (x * CELL_SIZE) + CELL_SIZE,
                            y * CELL_SIZE);
-      }
 
-      if (cell.right) {
+      if (cell.right)
         SDL_RenderDrawLine(renderer,
                            (x * CELL_SIZE) + CELL_SIZE,
                            y * CELL_SIZE,
                            (x * CELL_SIZE) + CELL_SIZE,
                            (y * CELL_SIZE) + CELL_SIZE);
-      }
 
-      if (cell.bottom) {
+      if (cell.bottom)
         SDL_RenderDrawLine(renderer,
                            (x * CELL_SIZE) + CELL_SIZE,
                            (y * CELL_SIZE) + CELL_SIZE,
                            x * CELL_SIZE,
                            (y * CELL_SIZE) + CELL_SIZE);
-      }
 
-      if (cell.left) {
+      if (cell.left)
         SDL_RenderDrawLine(renderer,
                            x * CELL_SIZE,
                            (y * CELL_SIZE) + CELL_SIZE,
                            x * CELL_SIZE,
                            y * CELL_SIZE);
-      }
     }
   }
 
   SDL_RenderPresent(renderer);
+}
+
+void
+draw_path(struct CellPos path[], int path_size, SDL_Renderer* renderer)
+{
+  SDL_SetRenderDrawColor(renderer, 158, 197, 171, 255);
+
+  // TODO: fix the animation
+  for (int i = 0; i < path_size; i++) {
+    for (int j = 0; j <= CELL_SIZE; j++) {
+      SDL_Rect rect;
+      rect.x = path[i].x * CELL_SIZE;
+      rect.y = path[i].y * CELL_SIZE;
+      rect.w = j;
+      rect.h = CELL_SIZE;
+      // if (i > 0 && path[i + 1].x > path[i - 1].x) {
+      //   rect.w = j;
+      //   rect.h = CELL_SIZE;
+      // }
+      SDL_RenderFillRect(renderer, &rect);
+      SDL_Delay(7);
+      SDL_RenderPresent(renderer);
+    }
+  }
+
+  // SDL_RenderPresent(renderer);
 }

@@ -10,6 +10,12 @@ main(int argc, char* args[])
 
   struct Cell** grid = generate_grid();
   display_maze(grid, renderer);
+  // struct CellPos path[6] = { { .x = 0, .y = 0 }, { .x = 1, .y = 0 },
+  //                            { .x = 2, .y = 0 }, { .x = 2, .y = 1 },
+  //                            { .x = 2, .y = 2 }, { .x = 2, .y = 2 } };
+  // draw_path(path, 6, renderer);
+
+  // SDL_RenderPresent(renderer);
 
   gui_loop();
 
