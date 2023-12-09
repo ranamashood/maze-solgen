@@ -1,5 +1,5 @@
 CC = gcc
-CFLAGS = -Wall -I$(INCLUDE_DIR) -lSDL2
+CFLAGS = -Wall -I$(INCLUDE_DIR) -lSDL2 -lm
 
 SRC_DIR = src
 INCLUDE_DIR = include
