@@ -97,11 +97,11 @@ void
 display_maze(struct Cell** grid, SDL_Renderer* renderer)
 {
   // bg color
-  SDL_SetRenderDrawColor(renderer, 1, 21, 2, 255);
+  SDL_SetRenderDrawColor(renderer, 36, 36, 36, 255);
   SDL_RenderClear(renderer);
   // SDL_RenderPresent(renderer);
 
-  SDL_SetRenderDrawColor(renderer, 50, 116, 109, 255);
+  SDL_SetRenderDrawColor(renderer, 210, 210, 210, 255);
 
   for (int y = 0; y < MAZE_HEIGHT; y++) {
     for (int x = 0; x < MAZE_WIDTH; x++) {
@@ -141,11 +141,11 @@ display_maze(struct Cell** grid, SDL_Renderer* renderer)
 }
 
 void
-draw_cell(SDL_Renderer* renderer,
-          struct Path path,
-          int j,
-          int cell_index,
-          int other_cell_index)
+draw_path_cell(SDL_Renderer* renderer,
+               struct Path path,
+               int j,
+               int cell_index,
+               int other_cell_index)
 {
   const struct CellPos cell_pos = path.positions[cell_index];
   const struct CellPos other_cell_pos = path.positions[other_cell_index];
@@ -180,16 +180,18 @@ draw_cell(SDL_Renderer* renderer,
 void
 draw_path(SDL_Renderer* renderer, struct Path path)
 {
-  SDL_SetRenderDrawColor(renderer, 158, 197, 171, 255);
+  float color = 0;
+  float segments = (float)255 / (path.length * CELL_SIZE);
 
   for (int i = path.length - 1; i >= 0; i--) {
     for (int j = 0; j < CELL_SIZE; j++) {
-
+      SDL_SetRenderDrawColor(renderer, 255 - color, color, 0, 255);
       if (i == path.length - 1) {
-        draw_cell(renderer, path, j, i, i - 1);
+        draw_path_cell(renderer, path, j, i, i - 1);
       } else {
-        draw_cell(renderer, path, j, i, i + 1);
+        draw_path_cell(renderer, path, j, i, i + 1);
       }
+      color += segments;
     }
   }
 }

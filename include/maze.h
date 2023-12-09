@@ -21,11 +21,11 @@ void
 display_maze(struct Cell** grid, SDL_Renderer* renderer);
 
 void
-draw_cell(SDL_Renderer* renderer,
-          struct Path path,
-          int j,
-          int cell_index,
-          int other_cell_index);
+draw_path_cell(SDL_Renderer* renderer,
+               struct Path path,
+               int j,
+               int cell_index,
+               int other_cell_index);
 
 void
 draw_path(SDL_Renderer* renderer, struct Path path);
