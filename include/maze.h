@@ -1,25 +1,9 @@
-#ifndef CELL_H
-#define CELL_H
+#ifndef MAZE_H
+#define MAZE_H
 
+#include "a_star.h"
+#include "cell.h"
 #include <SDL2/SDL_render.h>
-#include <stdbool.h>
-
-struct Cell
-{
-  int x;
-  int y;
-  bool visited;
-  bool top;
-  bool right;
-  bool bottom;
-  bool left;
-};
-
-struct CellPos
-{
-  int x;
-  int y;
-};
 
 struct Cell**
 generate_grid();
@@ -37,6 +21,16 @@ void
 display_maze(struct Cell** grid, SDL_Renderer* renderer);
 
 void
-draw_path(struct CellPos path[], int path_size, SDL_Renderer* renderer);
+draw_cell(SDL_Renderer* renderer,
+          struct Path path,
+          int j,
+          int cell_index,
+          int other_cell_index);
 
-#endif // !CELL_H
+void
+draw_path(SDL_Renderer* renderer, struct Path path);
+
+void
+free_grid(struct Cell** grid);
+
+#endif // !MAZE_H

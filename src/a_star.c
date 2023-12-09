@@ -71,7 +71,6 @@ tracePath(struct CellInfo cellDetails[][MAZE_WIDTH],
 
   while (
     !(cellDetails[y][x].parent_y == y && cellDetails[y][x].parent_x == x)) {
-    printf("-> (%d,%d) ", y, x);
     struct CellPos cell_pos = { x, y };
     add_path_position(path, cell_pos);
     int temp_y = cellDetails[y][x].parent_y;
@@ -160,18 +159,7 @@ aStarSearch(struct Cell** grid, struct Pair src, struct Pair dest)
       int new_y = y + y_move[move];
       int new_x = x + x_move[move];
 
-      printf("move: %i\n", move);
-      printf(
-        "(y: %i) + (y_move[move]: %i) = (new_y: %i)\n", y, y_move[move], new_y);
-      printf(
-        "(x: %i) + (x_move[move]: %i) = (new_x: %i)\n", x, x_move[move], new_x);
-      // printf("%i, %i\n", newRow, newCol);
-      // printf("%i, %i\n", i, j);
-      printf(
-        "%i, %i\n\n", isValid(new_y, new_x), isUnBlocked(grid, y, x, move));
       if (isValid(new_y, new_x) && isUnBlocked(grid, y, x, move)) {
-        // printf("%i, %i\n", newRow, newCol);
-        printf("^\n");
         if (isDestination(new_y, new_x, dest)) {
           cellDetails[new_y][new_x].parent_y = y;
           cellDetails[new_y][new_x].parent_x = x;
@@ -202,7 +190,8 @@ aStarSearch(struct Cell** grid, struct Pair src, struct Pair dest)
     }
   }
 
-  // tracePath(cellDetails, dest);
   if (!foundDest)
     printf("Failed to find the Destination Cell\n");
+
+  return path;
 }

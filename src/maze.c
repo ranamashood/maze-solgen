@@ -1,5 +1,5 @@
 #include "../include/maze.h"
-#include <SDL2/SDL_render.h>
+#include "../include/vars.h"
 #include <SDL2/SDL_timer.h>
 #include <time.h>
 
@@ -7,10 +7,6 @@
 // const int MAZE_WIDTH = 50;
 // const int MAZE_HEIGHT = 50;
 // const int CELL_SIZE = 10;
-
-const int MAZE_WIDTH = 20;
-const int MAZE_HEIGHT = 20;
-const int CELL_SIZE = 30;
 
 struct Cell**
 generate_grid()
@@ -145,27 +141,61 @@ display_maze(struct Cell** grid, SDL_Renderer* renderer)
 }
 
 void
-draw_path(struct CellPos path[], int path_size, SDL_Renderer* renderer)
+draw_cell(SDL_Renderer* renderer,
+          struct Path path,
+          int j,
+          int cell_index,
+          int other_cell_index)
+{
+  const struct CellPos cell_pos = path.positions[cell_index];
+  const struct CellPos other_cell_pos = path.positions[other_cell_index];
+
+  SDL_Rect rect;
+  rect.x = cell_pos.x * CELL_SIZE + ceil((float)CELL_SIZE / 4);
+  rect.y = cell_pos.y * CELL_SIZE + ceil((float)CELL_SIZE / 4);
+
+  bool is_src = (cell_index == path.length - 1);
+  int delta = is_src ? ((float)CELL_SIZE / 4) : -((float)CELL_SIZE / 4);
+  bool compare_x =
+    is_src ? (cell_pos.x < other_cell_pos.x) : (cell_pos.x > other_cell_pos.x);
+  bool compare_y =
+    is_src ? (cell_pos.y < other_cell_pos.y) : (cell_pos.y > other_cell_pos.y);
+
+  if (cell_pos.x != other_cell_pos.x) {
+    int k = compare_x ? j + delta : CELL_SIZE - j - delta;
+    rect.w = 1;
+    rect.h = ceil((float)CELL_SIZE / 2);
+    rect.x = cell_pos.x * CELL_SIZE + k;
+  } else if (cell_pos.y != other_cell_pos.y) {
+    int k = compare_y ? j + delta : CELL_SIZE - j - delta;
+    rect.w = ceil((float)CELL_SIZE / 2);
+    rect.h = 1;
+    rect.y = cell_pos.y * CELL_SIZE + k;
+  }
+  SDL_RenderFillRect(renderer, &rect);
+  SDL_Delay(7);
+  SDL_RenderPresent(renderer);
+}
+
+void
+draw_path(SDL_Renderer* renderer, struct Path path)
 {
   SDL_SetRenderDrawColor(renderer, 158, 197, 171, 255);
 
-  // TODO: fix the animation
-  for (int i = 0; i < path_size; i++) {
-    for (int j = 0; j <= CELL_SIZE; j++) {
-      SDL_Rect rect;
-      rect.x = path[i].x * CELL_SIZE;
-      rect.y = path[i].y * CELL_SIZE;
-      rect.w = j;
-      rect.h = CELL_SIZE;
-      // if (i > 0 && path[i + 1].x > path[i - 1].x) {
-      //   rect.w = j;
-      //   rect.h = CELL_SIZE;
-      // }
-      SDL_RenderFillRect(renderer, &rect);
-      SDL_Delay(7);
-      SDL_RenderPresent(renderer);
+  for (int i = path.length - 1; i >= 0; i--) {
+    for (int j = 0; j < CELL_SIZE; j++) {
+
+      if (i == path.length - 1) {
+        draw_cell(renderer, path, j, i, i - 1);
+      } else {
+        draw_cell(renderer, path, j, i, i + 1);
+      }
     }
   }
+}
 
-  // SDL_RenderPresent(renderer);
+void
+free_grid(struct Cell** grid)
+{
+  free(grid);
 }

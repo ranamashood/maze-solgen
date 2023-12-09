@@ -38,6 +38,7 @@ gui_init(const char* app_name)
 void
 gui_loop()
 {
+  // TODO: add quit key shortcut as it hangs now while quiting
   SDL_Event e;
   int quit = 0;
   while (!quit) {
