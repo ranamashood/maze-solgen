@@ -1,5 +1,5 @@
 #include "../include/maze.h"
-#include "../include/vars.h"
+#include "../include/config.h"
 #include <SDL2/SDL_timer.h>
 #include <time.h>
 
@@ -56,6 +56,8 @@ randomized_dfs(struct Cell** grid, struct Cell* cell)
 struct Cell*
 get_neighbour(struct Cell** grid, struct Cell cell)
 {
+  // TODO: use size_t in project instead of int for sizes
+  // TODO: use pre increment instead of post increment
   int size = 0;
   struct Cell* neighours[4];
 

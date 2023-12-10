@@ -1,3 +1,4 @@
+#include "../include/config.h"
 #include "../include/gui.h"
 #include "../include/maze.h"
 #include <SDL2/SDL.h>
@@ -5,6 +6,8 @@
 int
 main(int argc, char* args[])
 {
+  parse_config_file("examples/sample-config");
+
   SDL_Renderer* renderer = gui_init("Maze Solgen");
 
   struct Cell** grid = generate_grid();

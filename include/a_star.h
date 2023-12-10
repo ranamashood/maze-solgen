@@ -2,7 +2,7 @@
 #define A_STAR_H
 
 #include "cell.h"
-#include "vars.h"
+#include "config.h"
 
 struct CellInfo
 {

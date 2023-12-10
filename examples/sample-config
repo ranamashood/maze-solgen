@@ -1,0 +1,11 @@
+# default config
+# cell-size: 30
+# maze-width: 20
+# maze-height: 20
+
+# time unit is ms
+
+# animation-speed: 5
+cell-size: 10
+maze-width: 50
+maze-height: 50
