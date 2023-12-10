@@ -6,6 +6,5 @@
 - [x] display maze generating steps
   - [x] step wise
   - [x] iteration wise
-- [ ] options in settings page / arguments in cli
-- [ ] publish github release (linux + windows)
+- [ ] publish github release
 - [ ] add README

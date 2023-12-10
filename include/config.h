@@ -24,6 +24,6 @@ bool
 parse_option(char* line, char** option, char** value);
 
 void
-parse_config_file(const char* path);
+parse_config_file(int argc, char* args[]);
 
 #endif // !CONFIG_H

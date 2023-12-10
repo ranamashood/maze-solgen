@@ -6,7 +6,7 @@
 int
 main(int argc, char* args[])
 {
-  parse_config_file("examples/sample-config");
+  parse_config_file(argc, args);
 
   SDL_Renderer* renderer = gui_init("Maze Solgen");
 

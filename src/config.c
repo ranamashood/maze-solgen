@@ -81,29 +81,33 @@ parse_option(char* line, char** option, char** value)
 }
 
 void
-parse_config_file(const char* path)
+parse_config_file(int argc, char* args[])
 {
-  FILE* file;
-  file = fopen(path, "r");
+  if (argc == 2) {
+    char* path = args[1];
 
-  if (file == NULL) {
-    printf("config file \"%s\" not found\n", path);
-  }
+    FILE* file;
+    file = fopen(path, "r");
 
-  char* line = NULL;
-  size_t len = 0;
-  char *option, *value;
-
-  while (getline(&line, &len, file) != -1) {
-    char* trimmed_line = trim_line(line, len);
-    if (*trimmed_line == '#' || *trimmed_line == '\0')
-      continue;
-
-    if (parse_option(trimmed_line, &option, &value)) {
-      create_config(option, value);
+    if (file == NULL) {
+      printf("config file \"%s\" not found\n", path);
     }
-  }
 
-  if (line != NULL)
-    free(line);
+    char* line = NULL;
+    size_t len = 0;
+    char *option, *value;
+
+    while (getline(&line, &len, file) != -1) {
+      char* trimmed_line = trim_line(line, len);
+      if (*trimmed_line == '#' || *trimmed_line == '\0')
+        continue;
+
+      if (parse_option(trimmed_line, &option, &value)) {
+        create_config(option, value);
+      }
+    }
+
+    if (line != NULL)
+      free(line);
+  }
 }
