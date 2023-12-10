@@ -5,7 +5,6 @@
 # maze-height: 10
 
 cell-size: 20
-# cell-size: 22
 maze-width: 30
 maze-height: 30
 

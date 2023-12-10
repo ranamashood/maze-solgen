@@ -224,14 +224,15 @@ draw_path_cell(SDL_Renderer* renderer,
     is_src ? (cell_pos.x < other_cell_pos.x) : (cell_pos.x > other_cell_pos.x);
   bool compare_y =
     is_src ? (cell_pos.y < other_cell_pos.y) : (cell_pos.y > other_cell_pos.y);
+  bool is_multiple = ((float)CELL_SIZE / 4) == ceil((float)CELL_SIZE / 4);
 
   if (cell_pos.x != other_cell_pos.x) {
-    int k = compare_x ? j + delta : CELL_SIZE - j - delta;
+    int k = compare_x ? j + delta : CELL_SIZE - j - is_multiple - delta;
     rect.w = 1;
     rect.h = ceil((float)CELL_SIZE / 2);
     rect.x = cell_pos.x * CELL_SIZE + k;
   } else if (cell_pos.y != other_cell_pos.y) {
-    int k = compare_y ? j + delta : CELL_SIZE - j - delta;
+    int k = compare_y ? j + delta : CELL_SIZE - j - is_multiple - delta;
     rect.w = ceil((float)CELL_SIZE / 2);
     rect.h = 1;
     rect.y = cell_pos.y * CELL_SIZE + k;
