@@ -14,12 +14,12 @@ generate_grid(SDL_Renderer* renderer)
 {
   struct Cell** grid =
     (struct Cell**)malloc(MAZE_HEIGHT * sizeof(struct Cell*));
-  for (int y = 0; y < MAZE_HEIGHT; y++) {
+  for (int y = 0; y < MAZE_HEIGHT; ++y) {
     grid[y] = (struct Cell*)malloc(MAZE_WIDTH * sizeof(struct Cell));
   }
 
-  for (int y = 0; y < MAZE_HEIGHT; y++) {
-    for (int x = 0; x < MAZE_WIDTH; x++) {
+  for (int y = 0; y < MAZE_HEIGHT; ++y) {
+    for (int x = 0; x < MAZE_WIDTH; ++x) {
       grid[y][x] = (struct Cell){
         .x = x,
         .y = y,
@@ -72,8 +72,6 @@ randomized_dfs(SDL_Renderer* renderer, struct Cell** grid, struct Cell* cell)
 struct Cell*
 get_neighbour(struct Cell** grid, struct Cell cell)
 {
-  // TODO: use size_t in project instead of int for sizes
-  // TODO: use pre increment instead of post increment
   int size = 0;
   struct Cell* neighours[4];
 
@@ -183,8 +181,8 @@ display_maze(SDL_Renderer* renderer, struct Cell** grid)
 
   SDL_SetRenderDrawColor(renderer, 210, 210, 210, 255);
 
-  for (int y = 0; y < MAZE_HEIGHT; y++) {
-    for (int x = 0; x < MAZE_WIDTH; x++) {
+  for (int y = 0; y < MAZE_HEIGHT; ++y) {
+    for (int x = 0; x < MAZE_WIDTH; ++x) {
       struct Cell cell = grid[y][x];
 
       if (cell.top)
@@ -252,7 +250,7 @@ draw_path(SDL_Renderer* renderer, struct Path path)
   float segments = (float)255 / (path.length * CELL_SIZE);
 
   for (int i = path.length - 1; i >= 0; i--) {
-    for (int j = 0; j < CELL_SIZE; j++) {
+    for (int j = 0; j < CELL_SIZE; ++j) {
       SDL_SetRenderDrawColor(renderer, 255 - color, color, 0, 255);
       if (i == path.length - 1) {
         draw_path_cell(renderer, path, j, i, i - 1);

@@ -55,7 +55,7 @@ trim_line(char* line, size_t len)
   char* trimmed_line = line;
   int j = 0;
 
-  for (int i = 0; i < len; i++) {
+  for (int i = 0; i < len; ++i) {
     if (!isspace(line[i]))
       trimmed_line[j++] = line[i];
   }

@@ -102,16 +102,16 @@ aStarSearch(struct Cell** grid, struct Pair src, struct Pair dest)
   }
 
   bool closedList[MAZE_HEIGHT][MAZE_WIDTH];
-  for (int i = 0; i < MAZE_HEIGHT; i++) {
-    for (int j = 0; j < MAZE_WIDTH; j++) {
+  for (int i = 0; i < MAZE_HEIGHT; ++i) {
+    for (int j = 0; j < MAZE_WIDTH; ++j) {
       closedList[i][j] = false;
     }
   }
 
   struct CellInfo cellDetails[MAZE_HEIGHT][MAZE_WIDTH];
 
-  for (int i = 0; i < MAZE_HEIGHT; i++) {
-    for (int j = 0; j < MAZE_WIDTH; j++) {
+  for (int i = 0; i < MAZE_HEIGHT; ++i) {
+    for (int j = 0; j < MAZE_WIDTH; ++j) {
       cellDetails[i][j].f = DBL_MAX;
       cellDetails[i][j].g = DBL_MAX;
       cellDetails[i][j].h = DBL_MAX;
@@ -135,7 +135,7 @@ aStarSearch(struct Cell** grid, struct Pair src, struct Pair dest)
 
   while (openListSize > 0) {
     int minIndex = 0;
-    for (int k = 0; k < openListSize; k++) {
+    for (int k = 0; k < openListSize; ++k) {
       if (openList[k].first < openList[minIndex].first) {
         minIndex = k;
       }
@@ -155,7 +155,7 @@ aStarSearch(struct Cell** grid, struct Pair src, struct Pair dest)
     int y_move[] = { -1, 0, 1, 0 };
     int x_move[] = { 0, 1, 0, -1 };
 
-    for (int move = 0; move < 4; move++) {
+    for (int move = 0; move < 4; ++move) {
       int new_y = y + y_move[move];
       int new_x = x + x_move[move];
 
@@ -177,7 +177,7 @@ aStarSearch(struct Cell** grid, struct Pair src, struct Pair dest)
             openList[openListSize].first = fNew;
             openList[openListSize].second[0] = new_y;
             openList[openListSize].second[1] = new_x;
-            openListSize++;
+            ++openListSize;
 
             cellDetails[new_y][new_x].f = fNew;
             cellDetails[new_y][new_x].g = gNew;
