@@ -7,6 +7,12 @@
 extern int MAZE_WIDTH;
 extern int MAZE_HEIGHT;
 extern int CELL_SIZE;
+extern int GRID_CELL_DELAY;
+extern int GRID_ITERATION_DELAY;
+extern int PATH_CELL_DELAY;
+extern bool GRID_CELL_ANIMATION;
+extern bool GRID_ITERATION_ANIMATION;
+extern bool PATH_CELL_ANIMATION;
 
 void
 create_config(char* option, char* value);

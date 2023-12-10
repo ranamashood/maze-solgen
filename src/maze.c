@@ -1,5 +1,6 @@
 #include "../include/maze.h"
 #include "../include/config.h"
+#include <SDL2/SDL_render.h>
 #include <SDL2/SDL_timer.h>
 #include <time.h>
 
@@ -9,7 +10,7 @@
 // const int CELL_SIZE = 10;
 
 struct Cell**
-generate_grid()
+generate_grid(SDL_Renderer* renderer)
 {
   struct Cell** grid =
     (struct Cell**)malloc(MAZE_HEIGHT * sizeof(struct Cell*));
@@ -36,20 +37,35 @@ generate_grid()
   struct Cell* start_cell = &grid[0][0];
 
   srand(time(NULL));
-  randomized_dfs(grid, start_cell);
+  randomized_dfs(renderer, grid, start_cell);
 
   return grid;
 }
 
 void
-randomized_dfs(struct Cell** grid, struct Cell* cell)
+randomized_dfs(SDL_Renderer* renderer, struct Cell** grid, struct Cell* cell)
 {
+  if (GRID_CELL_ANIMATION)
+    SDL_Delay(GRID_CELL_DELAY);
+
+  bool iteration_finished = true;
   cell->visited = true;
   struct Cell* next_cell = get_neighbour(grid, *cell);
+
   while (next_cell != NULL) {
-    connect_cells(cell, next_cell);
-    randomized_dfs(grid, next_cell);
+    if (GRID_CELL_ANIMATION) {
+      display_maze(renderer, grid);
+      SDL_Delay(GRID_CELL_DELAY);
+    }
+
+    connect_cells(renderer, cell, next_cell);
+    randomized_dfs(renderer, grid, next_cell);
     next_cell = get_neighbour(grid, *cell);
+    iteration_finished = false;
+  }
+
+  if (GRID_ITERATION_ANIMATION && iteration_finished) {
+    SDL_Delay(GRID_ITERATION_DELAY);
   }
 }
 
@@ -80,23 +96,85 @@ get_neighbour(struct Cell** grid, struct Cell cell)
 }
 
 void
-connect_cells(struct Cell* curr_cell, struct Cell* next_cell)
+draw_cell_top(SDL_Renderer* renderer, struct Cell cell)
 {
-  if ((curr_cell->x == next_cell->x) && (curr_cell->y == next_cell->y + 1))
-    curr_cell->top = next_cell->bottom = false;
-
-  if (curr_cell->x == next_cell->x && curr_cell->y == next_cell->y - 1)
-    curr_cell->bottom = next_cell->top = false;
-
-  if (curr_cell->x == next_cell->x - 1 && curr_cell->y == next_cell->y)
-    curr_cell->right = next_cell->left = false;
-
-  if (curr_cell->x == next_cell->x + 1 && curr_cell->y == next_cell->y)
-    curr_cell->left = next_cell->right = false;
+  SDL_RenderDrawLine(renderer,
+                     cell.x * CELL_SIZE,
+                     cell.y * CELL_SIZE,
+                     (cell.x * CELL_SIZE) + CELL_SIZE,
+                     cell.y * CELL_SIZE);
 }
 
 void
-display_maze(struct Cell** grid, SDL_Renderer* renderer)
+draw_cell_right(SDL_Renderer* renderer, struct Cell cell)
+{
+  SDL_RenderDrawLine(renderer,
+                     (cell.x * CELL_SIZE) + CELL_SIZE,
+                     cell.y * CELL_SIZE,
+                     (cell.x * CELL_SIZE) + CELL_SIZE,
+                     (cell.y * CELL_SIZE) + CELL_SIZE);
+}
+
+void
+draw_cell_bottom(SDL_Renderer* renderer, struct Cell cell)
+{
+  SDL_RenderDrawLine(renderer,
+                     (cell.x * CELL_SIZE) + CELL_SIZE,
+                     (cell.y * CELL_SIZE) + CELL_SIZE,
+                     cell.x * CELL_SIZE,
+                     (cell.y * CELL_SIZE) + CELL_SIZE);
+}
+
+void
+draw_cell_left(SDL_Renderer* renderer, struct Cell cell)
+{
+  SDL_RenderDrawLine(renderer,
+                     cell.x * CELL_SIZE,
+                     (cell.y * CELL_SIZE) + CELL_SIZE,
+                     cell.x * CELL_SIZE,
+                     cell.y * CELL_SIZE);
+}
+
+void
+draw_cell_helper(void (*draw_cell_border)(SDL_Renderer*, struct Cell),
+                 SDL_Renderer* renderer,
+                 struct Cell cell)
+{
+  if (GRID_CELL_ANIMATION || GRID_ITERATION_ANIMATION) {
+    SDL_SetRenderDrawColor(renderer, 255, 0, 0, 255);
+    draw_cell_border(renderer, cell);
+    SDL_RenderPresent(renderer);
+  }
+}
+
+void
+connect_cells(SDL_Renderer* renderer,
+              struct Cell* curr_cell,
+              struct Cell* next_cell)
+{
+  if ((curr_cell->x == next_cell->x) && (curr_cell->y == next_cell->y + 1)) {
+    curr_cell->top = next_cell->bottom = false;
+    draw_cell_helper(draw_cell_top, renderer, *curr_cell);
+  }
+
+  if (curr_cell->x == next_cell->x && curr_cell->y == next_cell->y - 1) {
+    curr_cell->bottom = next_cell->top = false;
+    draw_cell_helper(draw_cell_bottom, renderer, *curr_cell);
+  }
+
+  if (curr_cell->x == next_cell->x - 1 && curr_cell->y == next_cell->y) {
+    curr_cell->right = next_cell->left = false;
+    draw_cell_helper(draw_cell_right, renderer, *curr_cell);
+  }
+
+  if (curr_cell->x == next_cell->x + 1 && curr_cell->y == next_cell->y) {
+    curr_cell->left = next_cell->right = false;
+    draw_cell_helper(draw_cell_left, renderer, *curr_cell);
+  }
+}
+
+void
+display_maze(SDL_Renderer* renderer, struct Cell** grid)
 {
   // bg color
   SDL_SetRenderDrawColor(renderer, 36, 36, 36, 255);
@@ -110,32 +188,16 @@ display_maze(struct Cell** grid, SDL_Renderer* renderer)
       struct Cell cell = grid[y][x];
 
       if (cell.top)
-        SDL_RenderDrawLine(renderer,
-                           x * CELL_SIZE,
-                           y * CELL_SIZE,
-                           (x * CELL_SIZE) + CELL_SIZE,
-                           y * CELL_SIZE);
+        draw_cell_top(renderer, cell);
 
       if (cell.right)
-        SDL_RenderDrawLine(renderer,
-                           (x * CELL_SIZE) + CELL_SIZE,
-                           y * CELL_SIZE,
-                           (x * CELL_SIZE) + CELL_SIZE,
-                           (y * CELL_SIZE) + CELL_SIZE);
+        draw_cell_right(renderer, cell);
 
       if (cell.bottom)
-        SDL_RenderDrawLine(renderer,
-                           (x * CELL_SIZE) + CELL_SIZE,
-                           (y * CELL_SIZE) + CELL_SIZE,
-                           x * CELL_SIZE,
-                           (y * CELL_SIZE) + CELL_SIZE);
+        draw_cell_bottom(renderer, cell);
 
       if (cell.left)
-        SDL_RenderDrawLine(renderer,
-                           x * CELL_SIZE,
-                           (y * CELL_SIZE) + CELL_SIZE,
-                           x * CELL_SIZE,
-                           y * CELL_SIZE);
+        draw_cell_left(renderer, cell);
     }
   }
 
@@ -175,8 +237,11 @@ draw_path_cell(SDL_Renderer* renderer,
     rect.y = cell_pos.y * CELL_SIZE + k;
   }
   SDL_RenderFillRect(renderer, &rect);
-  SDL_Delay(7);
-  SDL_RenderPresent(renderer);
+
+  if (PATH_CELL_ANIMATION) {
+    SDL_Delay(PATH_CELL_DELAY);
+    SDL_RenderPresent(renderer);
+  }
 }
 
 void
@@ -195,6 +260,11 @@ draw_path(SDL_Renderer* renderer, struct Path path)
       }
       color += segments;
     }
+  }
+
+  if (!PATH_CELL_ANIMATION) {
+    SDL_Delay(50);
+    SDL_RenderPresent(renderer);
   }
 }
 

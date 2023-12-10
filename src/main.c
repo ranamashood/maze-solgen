@@ -10,11 +10,11 @@ main(int argc, char* args[])
 
   SDL_Renderer* renderer = gui_init("Maze Solgen");
 
-  struct Cell** grid = generate_grid();
-  display_maze(grid, renderer);
+  struct Cell** grid = generate_grid(renderer);
+  display_maze(renderer, grid);
 
   struct Pair src = { 0, { 0, 0 } };
-  struct Pair dest = { 0, { 1, 0 } };
+  struct Pair dest = { 0, { 5, 0 } };
   struct Path path = aStarSearch(grid, src, dest);
   draw_path(renderer, path);
 

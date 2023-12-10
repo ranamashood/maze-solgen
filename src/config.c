@@ -1,25 +1,51 @@
 #include "../include/config.h"
 #include <ctype.h>
+#include <math.h>
+#include <stdio.h>
 #include <stdlib.h>
 #include <string.h>
 
-int MAZE_WIDTH = 2;
-int MAZE_HEIGHT = 2;
-int CELL_SIZE = 3;
+int MAZE_WIDTH = 30;
+int MAZE_HEIGHT = 20;
+int CELL_SIZE = 20;
+int GRID_CELL_DELAY = 5;
+int GRID_ITERATION_DELAY = 500;
+int PATH_CELL_DELAY = 5;
+bool GRID_CELL_ANIMATION = true;
+bool GRID_ITERATION_ANIMATION = true;
+bool PATH_CELL_ANIMATION = true;
 
 void
 create_config(char* option, char* value)
 {
-  int value_int = atoi(value);
+  int value_int;
 
-  if (value_int != 0) {
-    if (strcmp(option, "cell-size") == 0) {
+  if (!strcmp(value, "false"))
+    value_int = false;
+  else if (!strcmp(value, "true"))
+    value_int = true;
+  else
+    value_int = atoi(value);
+
+  if (value_int != 0 || !strcmp(value, "false")) {
+    if (!strcmp(option, "cell-size"))
       CELL_SIZE = value_int;
-    } else if (strcmp(option, "maze-width") == 0) {
+    else if (!strcmp(option, "maze-width"))
       MAZE_WIDTH = value_int;
-    } else if (strcmp(option, "maze-height") == 0) {
+    else if (!strcmp(option, "maze-height"))
       MAZE_HEIGHT = value_int;
-    }
+    else if (!strcmp(option, "grid-cell-delay"))
+      GRID_CELL_DELAY = value_int;
+    else if (!strcmp(option, "grid-iteration-delay"))
+      GRID_ITERATION_DELAY = value_int;
+    else if (!strcmp(option, "path-cell-delay"))
+      PATH_CELL_DELAY = value_int;
+    else if (!strcmp(option, "grid-cell-animation"))
+      GRID_CELL_ANIMATION = ceil((float)value_int / 2);
+    else if (!strcmp(option, "grid-iteration-animation"))
+      GRID_ITERATION_ANIMATION = value_int;
+    else if (!strcmp(option, "path-cell-animation"))
+      PATH_CELL_ANIMATION = value_int;
   }
 }
 

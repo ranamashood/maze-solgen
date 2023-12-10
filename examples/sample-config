@@ -1,11 +1,19 @@
-# default config
-# cell-size: 30
-# maze-width: 20
-# maze-height: 20
+# time unit for *-delay is ms
 
-# time unit is ms
+# cell-size: 50
+# maze-width: 10
+# maze-height: 10
 
-# animation-speed: 5
-cell-size: 10
-maze-width: 50
-maze-height: 50
+cell-size: 20
+# cell-size: 22
+maze-width: 30
+maze-height: 30
+
+grid-cell-animation: false
+grid-cell-delay: 50
+
+grid-iteration-animation: false
+grid-iteration-delay: 500
+
+path-cell-animation: false
+path-cell-delay: 5

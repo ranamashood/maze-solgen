@@ -6,19 +6,38 @@
 #include <SDL2/SDL_render.h>
 
 struct Cell**
-generate_grid();
+generate_grid(SDL_Renderer* renderer);
 
 void
-randomized_dfs(struct Cell** grid, struct Cell* cell);
+randomized_dfs(SDL_Renderer* renderer, struct Cell** grid, struct Cell* cell);
 
 struct Cell*
 get_neighbour(struct Cell** grid, struct Cell cell);
 
 void
-connect_cells(struct Cell* curr_cell, struct Cell* next_cell);
+draw_cell_top(SDL_Renderer* renderer, struct Cell cell);
 
 void
-display_maze(struct Cell** grid, SDL_Renderer* renderer);
+draw_cell_right(SDL_Renderer* renderer, struct Cell cell);
+
+void
+draw_cell_bottom(SDL_Renderer* renderer, struct Cell cell);
+
+void
+draw_cell_left(SDL_Renderer* renderer, struct Cell cell);
+
+void
+draw_cell_helper(void (*draw_cell_border)(SDL_Renderer*, struct Cell),
+                 SDL_Renderer* renderer,
+                 struct Cell cell);
+
+void
+connect_cells(SDL_Renderer* renderer,
+              struct Cell* curr_cell,
+              struct Cell* next_cell);
+
+void
+display_maze(SDL_Renderer* renderer, struct Cell** grid);
 
 void
 draw_path_cell(SDL_Renderer* renderer,
